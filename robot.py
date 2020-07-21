@@ -1,3 +1,5 @@
+#Petr Busov
+#This script governs the motion of the robot
 import time
 import sys
 import tkinter as tk
