@@ -30,63 +30,70 @@ o=GPIO.PWM(enb,1000)
 o.start(50)
 print("/n")
 print("default speed and dir is low and forward")
-print("use WASD keys to control the robot")
+
 run=True
 delay=0.001
 
+def forward(delay):
+
+	GPIO.output(in1,GPIO.LOW)
+	GPIO.output(in2,GPIO.HIGH)
+	GPIO.output(in3,GPIO.HIGH)
+	GPIO.output(in4,GPIO.LOW)
+	time.sleep(delay)
+	GPIO.output(in2,GPIO.LOW)
+	GPIO.output(in3,GPIO.LOW)
+	GPIO.output(in4,GPIO.LOW)
+	GPIO.output(in1,GPIO.LOW)
+	print("forward")
+
+def backward(delay):
+	GPIO.output(in1,GPIO.HIGH)
+	GPIO.output(in2,GPIO.LOW)
+	GPIO.output(in3,GPIO.LOW)
+	GPIO.output(in4,GPIO.HIGH)
+	time.sleep(delay)
+	GPIO.output(in2,GPIO.LOW)
+	GPIO.output(in3,GPIO.LOW)
+	GPIO.output(in4,GPIO.LOW)
+	GPIO.output(in1,GPIO.LOW)
+	print("retreat")
+	
+def right(delay):
+	GPIO.output(in1,GPIO.HIGH)
+	GPIO.output(in2,GPIO.LOW)
+	GPIO.output(in3,GPIO.HIGH)
+	GPIO.output(in4,GPIO.LOW)
+	time.sleep(delay)
+	GPIO.output(in2,GPIO.LOW)
+	GPIO.output(in3,GPIO.LOW)
+	GPIO.output(in4,GPIO.LOW)
+	GPIO.output(in1,GPIO.LOW)
+	print("right")
+	 
+def left(delay):
+
+	GPIO.output(in1,GPIO.LOW)
+	GPIO.output(in2,GPIO.HIGH)
+	GPIO.output(in3,GPIO.LOW)
+	GPIO.output(in4,GPIO.HIGH)
+	time.sleep(delay)
+	GPIO.output(in2,GPIO.LOW)
+	GPIO.output(in3,GPIO.LOW)
+	GPIO.output(in4,GPIO.LOW)
+	GPIO.output(in1,GPIO.LOW)
+	print("left")
+	
 while(run):
 	 try:
 	  k=key.char
 	 except:
 	  print("please use a wasdq characters")
 	 if k=="w":
-	  GPIO.output(in1,GPIO.LOW)
-	  GPIO.output(in2,GPIO.HIGH)
-	  GPIO.output(in3,GPIO.HIGH)
-	  GPIO.output(in4,GPIO.LOW)
-	  time.sleep(delay)
-	  GPIO.output(in2,GPIO.LOW)
-	  GPIO.output(in3,GPIO.LOW)
-	  GPIO.output(in4,GPIO.LOW)
-	  GPIO.output(in1,GPIO.LOW)
-
-	  print("forward")
 	 if k=="s":
-          GPIO.output(in1,GPIO.HIGH)
-          GPIO.output(in2,GPIO.LOW)
-          GPIO.output(in3,GPIO.LOW)
-          GPIO.output(in4,GPIO.HIGH)
-          time.sleep(delay)
-          GPIO.output(in2,GPIO.LOW)
-          GPIO.output(in3,GPIO.LOW)
-          GPIO.output(in4,GPIO.LOW)
-          GPIO.output(in1,GPIO.LOW)
-
-          print("retreat")
-	 if k=="d":
-          GPIO.output(in1,GPIO.HIGH)
-          GPIO.output(in2,GPIO.LOW)
-          GPIO.output(in3,GPIO.HIGH)
-          GPIO.output(in4,GPIO.LOW)
-          time.sleep(delay)
-          GPIO.output(in2,GPIO.LOW)
-          GPIO.output(in3,GPIO.LOW)
-          GPIO.output(in4,GPIO.LOW)
-          GPIO.output(in1,GPIO.LOW)
-          print("right")
-	 if k=="a":
-	  GPIO.output(in1,GPIO.LOW)
-	  GPIO.output(in2,GPIO.HIGH)
-	  GPIO.output(in3,GPIO.LOW)
-	  GPIO.output(in4,GPIO.HIGH)
-	  time.sleep(delay)
-	  GPIO.output(in2,GPIO.LOW)
-	  GPIO.output(in3,GPIO.LOW)
-	  GPIO.output(in4,GPIO.LOW)
-	  GPIO.output(in1,GPIO.LOW)
-	  print("left")
-
 	 if k=="q":
+	 if k=="d":
+	 if k=="a":
 	  print("stop")
 	  run=False
 	 #GPIO.output(in1,GPIO.LOW)
