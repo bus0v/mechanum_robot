@@ -141,7 +141,7 @@ GPIO.output(Rin4,GPIO.LOW)
 GPIO.output(Rin1,GPIO.LOW)
 GPIO.output(Rin2,GPIO.LOW)
 time.sleep(2)
-GPIO.cleanup()
+
 print("slide right")
 
 GPIO.output(Lin1,GPIO.LOW)
@@ -162,7 +162,7 @@ GPIO.output(Rin4,GPIO.LOW)
 GPIO.output(Rin1,GPIO.LOW)
 GPIO.output(Rin2,GPIO.LOW)
 time.sleep(2)
-GPIO.cleanup()
+
 print("slide left")
 
 GPIO.output(Lin1,GPIO.HIGH)
