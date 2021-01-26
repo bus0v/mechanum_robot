@@ -69,16 +69,17 @@ def turnoff(pin):
 def motor(position,direction):
     #f for forward
     # b for bcakward
-    if position==bl:
+    
+    if position="bl":
         first=Lin1
         second=Lin2
-    elif position == fl:
+    elif position == "fl":
         first=Lin3
         second=Lin4
-    elif position == fr:
+    elif position == "fr":
         first=Rin1
         second=Rin2
-    elif position == br:
+    elif position == "br":
         first=Rin3
         second=Rin4
     else:
@@ -87,12 +88,19 @@ def motor(position,direction):
     if direction=="f":
         turnon(first)
         turnoff(second)
-    elif direction=="b"
+    elif direction=="b":
         turnon(second)
         turnoff(first)  
+    elif direction=="s":
+        turnoff(second)
+        turnoff(first) 
     else:
         print("badinput")
     return
+
+motor(fr,f)
+time.sleep(2)
+motor(fr,s)
 
 GPIO.cleanup()
 ptiny("GPIO cleaned up")
