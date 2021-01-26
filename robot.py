@@ -98,9 +98,9 @@ def motor(position,direction):
         print("badinput")
     return
 
-motor(fr,f)
+motor("fr","f")
 time.sleep(2)
-motor(fr,s)
+motor("fr","s")
 
 GPIO.cleanup()
-ptiny("GPIO cleaned up")
+print("GPIO cleaned up")
