@@ -218,7 +218,7 @@ GPIO.output(Lin1,GPIO.HIGH)
 GPIO.output(Lin2,GPIO.LOW)
 GPIO.output(Lin3,GPIO.LOW)
 GPIO.output(Lin4,GPIO.HIGH)
-GPIO.output(Rin3,GPIO.HIGH
+GPIO.output(Rin3,GPIO.HIGH)
 GPIO.output(Rin4,GPIO.LOW)
 GPIO.output(Rin1,GPIO.LOW)
 GPIO.output(Rin2,GPIO.HIGH)
