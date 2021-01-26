@@ -40,7 +40,6 @@ GPIO.output(Lin1,GPIO.LOW)
 GPIO.output(Lin2,GPIO.LOW)
 GPIO.output(Lin3,GPIO.LOW)
 GPIO.output(Lin4,GPIO.LOW)
-
 GPIO.output(Rin1,GPIO.LOW)
 GPIO.output(Rin2,GPIO.LOW)
 GPIO.output(Rin3,GPIO.LOW)
@@ -61,129 +60,39 @@ print("default speed and dir is low and forward")
 run=True
 delay=0.001
 	
-print("all forward")
-print("forward")
-GPIO.output(Lin1,GPIO.HIGH)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.HIGH)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.HIGH)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.HIGH)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(1)
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(2)
+def turnon(pin):
+    GPIO.output(pin,GPIO.HIGH)
+    return
+def turnoff(pin):
+    GPIO.output(pin,GPIO.LOW)
+    return
+def motor(position,direction):
+    #f for forward
+    # b for bcakward
+    if position==bl:
+        first=Lin1
+        second=Lin2
+    elif position == fl:
+        first=Lin3
+        second=Lin4
+    elif position == fr:
+        first=Rin1
+        second=Rin2
+    elif position == br:
+        first=Rin3
+        second=Rin4
+    else:
+        print("invalid motor")
 
-print("all backward")
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.HIGH)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.HIGH)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.HIGH)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.HIGH)
-time.sleep(1)
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(2)
-
-print("rotate left")
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.HIGH)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.HIGH)
-GPIO.output(Rin3,GPIO.HIGH)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.HIGH)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(1)
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(2)
-
-print("rotate right")
-GPIO.output(Lin1,GPIO.HIGH)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.HIGH)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.HIGH)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.HIGH)
-time.sleep(1)
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(2)
-
-print("slide right")
-
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.HIGH)
-GPIO.output(Lin3,GPIO.HIGH)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.HIGH)
-GPIO.output(Rin1,GPIO.HIGH)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(1)
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(2)
-
-print("slide left")
-
-GPIO.output(Lin1,GPIO.HIGH)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.HIGH)
-GPIO.output(Rin3,GPIO.HIGH)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.HIGH)
-time.sleep(1)
-print("set all pins low")
-GPIO.output(Lin1,GPIO.LOW)
-GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
-GPIO.output(Rin3,GPIO.LOW)
-GPIO.output(Rin4,GPIO.LOW)
-GPIO.output(Rin1,GPIO.LOW)
-GPIO.output(Rin2,GPIO.LOW)
-time.sleep(2)
-
+    if direction=="f":
+        turnon(first)
+        turnoff(second)
+    elif direction=="b"
+        turnon(second)
+        turnoff(first)  
+    else:
+        print("badinput")
+    return
 
 GPIO.cleanup()
+ptiny("GPIO cleaned up")
