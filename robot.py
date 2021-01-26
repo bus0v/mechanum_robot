@@ -70,7 +70,7 @@ def motor(position,direction):
     #f for forward
     # b for bcakward
     
-    if position="bl":
+    if position=="bl":
         first=Lin1
         second=Lin2
     elif position == "fl":
