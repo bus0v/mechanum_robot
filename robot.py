@@ -105,6 +105,6 @@ while(True):
         motor(position,direction)
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         print("Keyboard interrupt")
-    finally:
         GPIO.cleanup()
         print("GPIO cleaned up")
+    
