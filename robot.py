@@ -4,8 +4,7 @@ import time
 import sys
 import tkinter as tk
 import RPi.GPIO as GPIO
-mode=GPIO.getmode()
-print(str(mode))
+
 #setup motor pins
 #left
 Lenb=2
@@ -38,8 +37,8 @@ GPIO.setup(Rin4,GPIO.OUT)
 
 GPIO.output(Lin1,GPIO.LOW)
 GPIO.output(Lin2,GPIO.LOW)
-GPIO.output(Lin3,GPIO.LOW)
-GPIO.output(Lin4,GPIO.LOW)
+GPIO.output(Lin3,GPIO.HIGH)
+GPIO.output(Lin4,GPIO.HOGH)
 GPIO.output(Rin1,GPIO.LOW)
 GPIO.output(Rin2,GPIO.LOW)
 GPIO.output(Rin3,GPIO.LOW)
@@ -98,9 +97,10 @@ def motor(position,direction):
         print("badinput")
     return
 
-motor("fr","f")
-time.sleep(2)
-motor("fr","s")
+while(True):
+    position=input("which motor do you want to run on? (fr, fl,br,bl): ")
+    direction=input("forward f backward b or stop s ?")
+    motor(position,direction)
 
 GPIO.cleanup()
 print("GPIO cleaned up")
