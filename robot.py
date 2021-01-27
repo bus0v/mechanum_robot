@@ -69,16 +69,16 @@ def motor(position,direction):
     #f for forward
     # b for bcakward
     
-    if position=="bl":
+    if position=="br":
         first=Lin2
         second=Lin1
-    elif position == "fl":
+    elif position == "fr":
         first=Lin4
         second=Lin3
-    elif position == "fr":
+    elif position == "fl":
         first=Rin1
         second=Rin2
-    elif position == "br":
+    elif position == "bl":
         first=Rin3
         second=Rin4
     else:
