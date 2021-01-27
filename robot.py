@@ -100,12 +100,10 @@ def motor(position,direction):
 position=""
 direction=""
 while(position!=" "):
-    try:
-        position=input("which motor do you want to run on? (fr, fl,br,bl): ")
-        direction=input("forward f backward b or stop s ?")
-        motor(position,direction)
-    except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
-        print("Keyboard interrupt")
-        GPIO.cleanup()
-        print("GPIO cleaned up")
-    
+
+    position=input("which motor do you want to run on? (fr, fl,br,bl): ")
+    direction=input("forward f backward b or stop s ?")
+    motor(position,direction)
+
+GPIO.cleanup()
+print("GPIO cleaned up")
