@@ -97,8 +97,9 @@ def motor(position,direction):
     else:
         print("badinput")
     return
-
-while(True):
+position=""
+direction=""
+while(position!=" "):
     try:
         position=input("which motor do you want to run on? (fr, fl,br,bl): ")
         direction=input("forward f backward b or stop s ?")
