@@ -74,11 +74,11 @@ def motor(position,direction):
         first=Lin2
         second=Lin1
     elif position == "fr":
-        first=Lin3
-        second=Lin4
+        first=Lin4
+        second=Lin3
     elif position == "fl":
-        first=Rin1
-        second=Rin2
+        first=Rin2
+        second=Rin1
     elif position == "bl":
         first=Rin3
         second=Rin4
@@ -99,11 +99,12 @@ def motor(position,direction):
     return
 position=""
 direction=""
-while(position!=" "):
+while(position!=""):
 
     position=input("which motor do you want to run on? (fr, fl,br,bl): ")
     direction=input("forward f backward b or stop s ?")
     motor(position,direction)
+
 
 GPIO.cleanup()
 print("GPIO cleaned up")
