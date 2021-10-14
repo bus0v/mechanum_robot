@@ -1,5 +1,5 @@
-
 #include <ros.h>
+#include <std_msgs/String.h>
 
 #define enB 10
 #define enA 11
@@ -37,9 +37,11 @@ int BLBState = 0;
 int counter=0;
 
 byte data = 0;  
-
+// instantiate the node handle
 ros::NodeHandle nh;
-
+str_msgs::String str_msg;
+// instantiate publisher
+ros::Publisher chatter("chatter", &str_msg);
 void setup(){
   Serial.begin(9600);
   pinMode(FRB, INPUT);
@@ -57,7 +59,7 @@ void setup(){
   pinMode(latchpin, OUTPUT);
   pinMode(datapin, OUTPUT);  
   pinMode(clockpin, OUTPUT); 
-   
+
   int power=100;
   analogWrite(enA, power);
   analogWrite(enB, power);
@@ -71,14 +73,15 @@ void setup(){
   FLBLastState = digitalRead(FLB);
   BLALastState = digitalRead(BLA);
   BLBLastState = digitalRead(BLB);
+
+  // initialize the ros node
   nh.initNode();
+  nh.advertise(chatter);
+  char hello[13] = 'hello world!'
   Serial.println(FRALastState); 
   Serial.print("Set up complete");
   
 }
-
-
-      
 
 
 void shiftWrite(int desiredPin, boolean desiredState){
@@ -110,7 +113,10 @@ void shiftWrite(int desiredPin, boolean desiredState){
 //      
 //}}
 void loop(){
-  demo();
+    str_msg.data = hello;
+    chatter.publish(&str_msg);
+    nh.spinOnce();
+    delay(1000)
 
   }
 void test(){
@@ -250,7 +256,6 @@ void fl_back(){
       shiftWrite(3, LOW);
       shiftWrite(4, HIGH);
 }
-
 
 void br_back(){
      //works
