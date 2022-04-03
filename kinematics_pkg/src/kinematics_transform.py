@@ -77,7 +77,7 @@ def globalToWheel(qvel):
     return msg.data
 
 def publisher(message):
-    pub = rospy.Pulisher('motor',Float32MultiArray,queue_size=50)
+    pub = rospy.Publisher('motor',Float32MultiArray,queue_size=50)
     rate = rospy.Rate(10)
     pub.publish(message)
     
