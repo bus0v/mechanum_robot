@@ -70,11 +70,7 @@ def globalToWheel(qvel):
     msg.layout.dim[0].size = 4
     msg.data = wheels
     print("this is the array to arduino %s"%msg.data)
-    print(msg.data[0])
-    print(msg.data[1])
-    print(msg.data[2])
-    print(msg.data[3])
-    return msg.data
+    return msg
 
 def publisher(message):
     pub = rospy.Publisher('motor',Float32MultiArray,queue_size=50)
