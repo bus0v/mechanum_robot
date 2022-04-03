@@ -49,7 +49,8 @@ def localToGlobal(xdot, ydot, thetadot, theta):
     return(q_vel)
 
 def globalToWheel(qvel):
-    
+    print("this is q_vel %s"%q_vel)
+    print(type(q_vel))
     transform = (1/R) * np.array([[-1, 1, (d1+d2)],
                                   [1, 1, -(d1+d2)],
                                   [-1, 1, -(d1+d2)],
