@@ -30,7 +30,7 @@ def subscriber():
 def convert(message):
     rospy.loginfo("I recieved a message: %s"%message.data)
     rospy.loginfo("and converted twist into motor speed")
-    print(globalToWheel(localToGlobal(0, 5, 0, 1.5708)))
+    #print(globalToWheel(localToGlobal(0, 5, 0, 1.5708)))
 
 def localToGlobal(xdot, ydot, thetadot, theta):
     
