@@ -6,7 +6,8 @@
 import numpy as np
 import math
 import rospy
-import std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float32MultiArray
+from geometry_msgs.msg import Twist
 # half width in mm
 d1 = 107
 # half length in mm
@@ -28,7 +29,7 @@ def subscriber():
     rospy.spin()
 
 def convert(message):
-    rospy.loginfo("I recieved a message: %s"%message.data)
+    rospy.loginfo("I recieved a message: %s"%message.linear)
     rospy.loginfo("and converted twist into motor speed")
     #print(globalToWheel(localToGlobal(0, 5, 0, 1.5708)))
 
