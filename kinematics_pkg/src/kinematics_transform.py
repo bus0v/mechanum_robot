@@ -30,12 +30,6 @@ def subscriber():
     rospy.spin()
 
 def convert(message):
-    rospy.loginfo("linear: %s"%message.linear)
-    rospy.loginfo("angular: %s"%message.angular)
-    rospy.loginfo("extracted x: %s"%message.linear.x)
-    rospy.loginfo("extracted y: %s"%message.linear.y)
-    rospy.loginfo("extracted theta: %s"%message.angular.z)
-    rospy.loginfo("and converted twist into motor speed")
     rospy.loginfo(globalToWheel(np.array([message.linear.x, message.linear.y, message.angular.z])))
     publisher(globalToWheel(np.array([message.linear.y, message.linear.x, message.angular.z])))
 
@@ -58,11 +52,9 @@ def globalToWheel(qvel):
                             (-1, 1, -(d1+d2)),
                             (1, 1, (d1+d2)) ])
 
-    print("this is transform %s"%transform)
-    wheels = transform.dot(qvel)
-    print("this is wheels %s"%wheels)
     
-
+    wheels = transform.dot(qvel)
+    
     msg = Float32MultiArray()
     msg.layout.data_offset = 0
     msg.layout.dim = [MultiArrayDimension()]
@@ -74,7 +66,7 @@ def globalToWheel(qvel):
 
 def publisher(message):
     pub = rospy.Publisher('motor',Float32MultiArray,queue_size=50)
-    rate = rospy.Rate(10)
+    rate = rospy.Rate(10000)
     pub.publish(message)
     
 if __name__ == "__main__":
