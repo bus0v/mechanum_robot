@@ -35,7 +35,7 @@ def convert(message):
     rospy.loginfo("extracted y: %s"%message.linear.y)
     rospy.loginfo("extracted theta: %s"%message.angular.z)
     rospy.loginfo("and converted twist into motor speed")
-    #print(globalToWheel(localToGlobal(0, 5, 0, 1.5708)))
+    rospy.loginfo(globalToWheel(localToGlobal(message.linear.x, message.linear.y, message.angular.z, 0)))
 
 def localToGlobal(xdot, ydot, thetadot, theta):
     
