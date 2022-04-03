@@ -7,6 +7,7 @@ import numpy as np
 import math
 import rospy
 from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import MultiArrayDimension
 from geometry_msgs.msg import Twist
 # half width in cm
 d1 = 10.70
