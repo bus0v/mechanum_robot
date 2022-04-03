@@ -49,15 +49,12 @@ def localToGlobal(xdot, ydot, thetadot, theta):
     return(q_vel)
 
 def globalToWheel(qvel):
-    xdotQ = qvel[0]
-    ydotQ = qvel[1]
-    thetadotQ = qvel[2]
-    qframe = np.array([xdotQ, ydotQ, thetadotQ])
+    
     transform = (1/R) * np.array([[-1, 1, (d1+d2)],
                                   [1, 1, -(d1+d2)],
                                   [-1, 1, -(d1+d2)],
                                   [1, 1, (d1+d2)]])
-    wheels = transform.dot(qframe)
+    wheels = transform.dot(qvel)
     print("this is wheels %s"%wheels)
     return wheels
 
