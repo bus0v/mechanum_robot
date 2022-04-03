@@ -45,7 +45,7 @@ def localToGlobal(xdot, ydot, thetadot, theta):
                            [0, 0, 1] ])
 
     q_vel = transform.dot(robot_frame)
-    print(q_vel)
+    print("this is q_vel %s"%q_vel)
     return(q_vel)
 
 def globalToWheel(qvel):
@@ -58,6 +58,7 @@ def globalToWheel(qvel):
                                   [-1, 1, -(d1+d2)],
                                   [1, 1, (d1+d2)]])
     wheels = transform.dot(qframe)
+    print("this is wheels %s"%wheels)
     return wheels
 
 if __name__ == "__main__":
