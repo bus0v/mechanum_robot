@@ -29,7 +29,11 @@ def subscriber():
     rospy.spin()
 
 def convert(message):
-    rospy.loginfo("I recieved a message: %s"%message.linear)
+    rospy.loginfo("linear: %s"%message.linear)
+    rospy.loginfo("angular: %s"%message.angular)
+    rospy.loginfo("extracted x: %s"%message.linear.x)
+    rospy.loginfo("extracted y: %s"%message.linear.y)
+    rospy.loginfo("extracted theta: %s"%message.angular.z)
     rospy.loginfo("and converted twist into motor speed")
     #print(globalToWheel(localToGlobal(0, 5, 0, 1.5708)))
 
