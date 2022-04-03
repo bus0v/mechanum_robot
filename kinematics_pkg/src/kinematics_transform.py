@@ -22,7 +22,7 @@ r = 7.5
 # input is x speed y speed and theta speed
 # meaning speed sideways, forward, and the rate at which the robot turns
 
-
+np.set_printoptions(precision=3)
 def subscriber():
     # topic, message type, callback function
     sub = rospy.Subscriber('cmd_vel', Twist, convert)
@@ -40,7 +40,7 @@ def convert(message):
 def localToGlobal(xdot, ydot, thetadot, theta):
     
     robot_frame = np.array([xdot, ydot, thetadot])
-    transform = np.array([ [math.cos(theta), math.sin(theta), 0],
+    transform = np.array([ math.cos(theta), math.sin(theta), 0],
                            [-math.sin(theta), math.cos(theta), 0],
                            [0, 0, 1] ])
 
@@ -51,10 +51,11 @@ def localToGlobal(xdot, ydot, thetadot, theta):
 def globalToWheel(qvel):
     print("this is q_vel %s"%qvel)
     print(type(qvel))
-    transform = (1/R) * np.array([[-1, 1, (d1+d2)],
-                                  [1, 1, -(d1+d2)],
-                                  [-1, 1, -(d1+d2)],
-                                  [1, 1, (d1+d2)]])
+    transform = (1/R) * np.array([ (-1, 1, (d1+d2)),
+                                  (1, 1, -(d1+d2)),
+                                  (-1, 1, -(d1+d2)),
+                                  (1, 1, (d1+d2)) ]
+
     print("this is transform %s"%transform)
     wheels = transform.dot(qvel)
     print("this is wheels %s"%wheels)
