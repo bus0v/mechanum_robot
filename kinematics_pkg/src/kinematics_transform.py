@@ -52,9 +52,9 @@ def globalToWheel(qvel):
     print("this is q_vel %s"%qvel)
     print(type(qvel))
     transform = np.array([ (-1, 1, (d1+d2)),
-                                 (1, 1, -(d1+d2)),
-                                  (-1, 1, -(d1+d2)),
-                                  (1, 1, (d1+d2)) ])
+                            (1, 1, -(d1+d2)),
+                            (-1, 1, -(d1+d2)),
+                            (1, 1, (d1+d2)) ])
 
     print("this is transform %s"%transform)
     wheels = transform.dot(qvel)
@@ -73,6 +73,12 @@ def globalToWheel(qvel):
     print(msg.data[2])
     print(msg.data[3])
     return msg.data
+
+def publisher(message):
+    pub =rospy.Pulisher('motor',Float32MultiArray,queue_size=50)
+    rate = rospy.Rate(10)
+    pub.publish(message)
+    
 if __name__ == "__main__":
     rospy.init_node("simple_subscriber")
     subscriber()
