@@ -9,11 +9,11 @@ import rospy
 from std_msgs.msg import Float32MultiArray
 from geometry_msgs.msg import Twist
 # half width in mm
-d1 = 107
+d1 = 107.0
 # half length in mm
-d2 = 83
+d2 = 83.0
 # wheel radius in mm
-R = 40
+R = 40.0
 # roller radius in mm
 r = 7.5
 # thetadot is rad/s
