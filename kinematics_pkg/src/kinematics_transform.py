@@ -8,16 +8,16 @@ import math
 import rospy
 from std_msgs.msg import Float32MultiArray
 from geometry_msgs.msg import Twist
-# half width in mm
-d1 = 107.0
-# half length in mm
-d2 = 83.0
-# wheel radius in mm
-R = 40.0
-# roller radius in mm
-r = 7.5
+# half width in cm
+d1 = 10.70
+# half length in cm
+d2 = 8.30
+# wheel radius in cm
+R = 4.00
+# roller radius in cm
+r = 0.75
 # thetadot is rad/s
-# speeds are mm/s
+# speeds are cm/s
 
 # input is x speed y speed and theta speed
 # meaning speed sideways, forward, and the rate at which the robot turns
@@ -51,8 +51,8 @@ def localToGlobal(xdot, ydot, thetadot, theta):
 def globalToWheel(qvel):
     print("this is q_vel %s"%qvel)
     print(type(qvel))
-    transform = (1/R) * np.array([ (-1, 1, (d1+d2)),
-                                  (1, 1, -(d1+d2)),
+    transform = np.array([ (-1, 1, (d1+d2)),
+                                 (1, 1, -(d1+d2)),
                                   (-1, 1, -(d1+d2)),
                                   (1, 1, (d1+d2)) ])
 
