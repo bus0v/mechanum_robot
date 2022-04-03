@@ -55,6 +55,7 @@ def globalToWheel(qvel):
                                   [1, 1, -(d1+d2)],
                                   [-1, 1, -(d1+d2)],
                                   [1, 1, (d1+d2)]])
+    print("this is transform %s"%transform)
     wheels = transform.dot(qvel)
     print("this is wheels %s"%wheels)
     return wheels
