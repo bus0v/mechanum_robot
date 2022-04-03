@@ -40,7 +40,7 @@ def convert(message):
 def localToGlobal(xdot, ydot, thetadot, theta):
     
     robot_frame = np.array([xdot, ydot, thetadot])
-    transform = np.array([ math.cos(theta), math.sin(theta), 0],
+    transform = np.array([[ math.cos(theta), math.sin(theta), 0],
                            [-math.sin(theta), math.cos(theta), 0],
                            [0, 0, 1] ])
 
