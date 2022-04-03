@@ -59,8 +59,20 @@ def globalToWheel(qvel):
     print("this is transform %s"%transform)
     wheels = transform.dot(qvel)
     print("this is wheels %s"%wheels)
-    return wheels
+    
 
+    msg = Float32MultiArray()
+    msg.layout.data_offset = 0
+    msg.layout.dim = [MultiArrayDimension()]
+    msg.layout.dim[0].label = "velocities"
+    msg.layout.dim[0].size = 4
+    msg.data = wheels
+    print("this is the array to arduino %s"%msg.data)
+    print(msg.data[0])
+    print(msg.data[1])
+    print(msg.data[2])
+    print(msg.data[3])
+    return msg.data
 if __name__ == "__main__":
     rospy.init_node("simple_subscriber")
     subscriber()
