@@ -36,7 +36,8 @@ def convert(message):
     rospy.loginfo("extracted y: %s"%message.linear.y)
     rospy.loginfo("extracted theta: %s"%message.angular.z)
     rospy.loginfo("and converted twist into motor speed")
-    rospy.loginfo(globalToWheel(localToGlobal(message.linear.x, message.linear.y, message.angular.z, 0)))
+    rospy.loginfo(globalToWheel(message.linear.x, message.linear.y, message.angular.z))
+    publisher(globalToWheel(message.linear.x, message.linear.y, message.angular.z))
 
 def localToGlobal(xdot, ydot, thetadot, theta):
     
@@ -51,7 +52,7 @@ def localToGlobal(xdot, ydot, thetadot, theta):
 
 def globalToWheel(qvel):
     print("this is q_vel %s"%qvel)
-    print(type(qvel))
+    
     transform = np.array([ (-1, 1, (d1+d2)),
                             (1, 1, -(d1+d2)),
                             (-1, 1, -(d1+d2)),
@@ -76,7 +77,7 @@ def globalToWheel(qvel):
     return msg.data
 
 def publisher(message):
-    pub =rospy.Pulisher('motor',Float32MultiArray,queue_size=50)
+    pub = rospy.Pulisher('motor',Float32MultiArray,queue_size=50)
     rate = rospy.Rate(10)
     pub.publish(message)
     
