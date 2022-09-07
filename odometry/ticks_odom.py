@@ -3,56 +3,89 @@ import rospy
 import math
 from std_msgs.msg import Int16MultiArray
 
-#define variables
-# half width in cm
-d1 = 10.70
-# half length in cm
-d2 = 8.30
-# wheel radius in cm
-R = 4.00
-# roller radius in cm
-r = 0.75
-#ticks per rotation = 11(ticks) * 30 gear ratio
-tpr = 330
+class OdomTf:
+    def __init__(self):
+        #define variables
+        # half width in cm
+        self.d1 = 10.70
+        # half length in cm
+        self.d2 = 8.30
+        # wheel radius in cm
+        self.R = 4.00
+        # roller radius in cm
+        self.r = 0.75
+        #ticks per rotation = 11(ticks) * 30 gear ratio
+        self.tpr = 330
 
-x = 0.0
-y = 0.0
-theta = 0.0
-x_dot = 0.0
-y_dot = 0.0
-theta_dot = 0.0
+        self.x = 0.0
+        self.y = 0.0
+        self.theta = 0.0
+        self.x_dot = 0.0
+        self.y_dot = 0.0
+        self.theta_dot = 0.0
 
-fr_ticks = 0.0
-fl_ticks = 0.0
-bl_ticks = 0.0
-br_ticks = 0.0
+        self.fr_ticks = 0.0
+        self.fl_ticks = 0.0
+        self.bl_ticks = 0.0
+        self.br_ticks = 0.0
 
-def callback(message):
-    #recieve and record encoder ticks
-    global fr_ticks, fl_ticks, bl_ticks, br_ticks
-    fr_ticks = message.data[0]
-    fl_ticks = message.data[1]
-    bl_ticks = message.data[2]
-    br_ticks = message.data[3]
+        self.fr_ticks_prev = 0.0
+        self.fl_ticks_prev = 0.0
+        self.bl_ticks_prev = 0.0
+        self.br_ticks_prev = 0.0
+
+        self.fr_angular = 0.0
+        self.fl_angular = 0.0
+        self.bl_angular = 0.0
+        self.br_angular = 0.0
+        # parameters
+        self.rate =  rospy.get_param("~rate",10.0)
+        self.t_delta = rospy.Duration(1.0/self.rate)
+        self.min_time = rospyTime.now() + self.t_delta
+
+        self.last_time = rospy.Time.now()
+        rospy.init_node('ticks_reciever',anonymous = True)
+        rospy.Subscriber("ticks",Int16MultiArray,ticks_reciever)
+        rospy.spin()
+
+    def spin(self):
+        rate = rospy.Rate(self.rate)
+        while not rospy.is_shutdown():
+            self.update()
+            r.sleep()
+
+    def ticks_reciever(message):
+        #recieve and record encoder ticks
+        self.fr_ticks = message.data[0]
+        self.fl_ticks = message.data[1]
+        self.bl_ticks = message.data[2]
+        self.br_ticks = message.data[3]
 
 
-def listener():
-    rospy.init_node('ticks_reciever',anonymous = True)
+    def update(self):
+        now = rospy.Time.now()
+        if now > self.min_time:
+            time_elapsed = now - self.last_time
+            time_elapsed.to_sec()
+            self.then = now
 
-    rospy.Subscriber("ticks",Int16MultiArray,callback)
+        self.fr_angular = (self.fr_ticks-self.fr_ticks_prev)/330
+        self.fl_angular = (self.fl_ticks-self.fl_ticks_prev)/330
+        self.bl_angular = (self.bl_ticks-self.bl_ticks_prev)/330
+        self.br_angular = (self.br_ticks-self.br_ticks_prev)/330
+        self.fr_ticks_prev = self.fr_ticks
+        self.fl_ticks_prev = self.fl_ticks
+        self.bl_ticks_prev = self.bl_ticks
+        self.br_ticks_prev = self.br_ticks
 
-    rospy.spin()
-
+    def inverse_kinematics():
+        self.x_dot = (self.fr_angular + self.fl_angular + self.bl_angular + self.br_angular) *self.R/4
 if __name__ = '__main__':
-    listener()
+    odomtf = OdomTf()
+    odomtf.spin()
     #translate encoder ticks into distance
-    fr_distance = fr_ticks/330 * R *2 * math.pi
-    fl_distance = fl_ticks/330 * R *2 * math.pi
-    bl_distance = bl_ticks/330 * R *2 * math.pi
-    br_distance = br_ticks/330 * R *2 * math.pi
-    current_time = rospy.Time.now()
-    last_time = rospy.Time.now()
-    #calculate velocities usinf forward kinematics
+
+    #calculate velocities using forward kinematics
 
     #calculate theta
 

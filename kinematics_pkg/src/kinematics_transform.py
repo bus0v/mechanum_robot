@@ -23,7 +23,7 @@ r = 0.75
 # input is x speed y speed and theta speed
 # meaning speed sideways, forward, and the rate at which the robot turns
 
-np.set_printoptions(precision=3)
+np.set_printoptions(precision = 3)
 def subscriber():
     # topic, message type, callback function
     sub = rospy.Subscriber('cmd_vel', Twist, convert)
@@ -34,7 +34,7 @@ def convert(message):
     publisher(globalToWheel(np.array([message.linear.y, message.linear.x, message.angular.z])))
 
 def localToGlobal(xdot, ydot, thetadot, theta):
-    
+
     robot_frame = np.array([xdot, ydot, thetadot])
     transform = np.array([[ math.cos(theta), math.sin(theta), 0],
                            [-math.sin(theta), math.cos(theta), 0],
@@ -46,15 +46,15 @@ def localToGlobal(xdot, ydot, thetadot, theta):
 
 def globalToWheel(qvel):
     print("this is q_vel %s"%qvel)
-    
+
     transform = np.array([ (-1, 1, (d1+d2)),
                             (1, 1, -(d1+d2)),
                             (-1, 1, -(d1+d2)),
                             (1, 1, (d1+d2)) ])
 
-    
+
     wheels = transform.dot(qvel)
-    
+
     msg = Float32MultiArray()
     msg.layout.data_offset = 0
     msg.layout.dim = [MultiArrayDimension()]
@@ -68,10 +68,7 @@ def publisher(message):
     pub = rospy.Publisher('motor',Float32MultiArray,queue_size=50)
     rate = rospy.Rate(57600)
     pub.publish(message)
-    
+
 if __name__ == "__main__":
-    rospy.init_node("simple_subscriber")
+    rospy.init_node("Kinematics")
     subscriber()
-
-
-
