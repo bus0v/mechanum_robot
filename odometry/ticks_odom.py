@@ -66,30 +66,38 @@ class OdomTf:
         now = rospy.Time.now()
         if now > self.min_time:
             time_elapsed = now - self.last_time
-            time_elapsed.to_sec()
+            time_elapsed = time_elapsed.to_sec()
             self.then = now
-
-        self.fr_angular = (self.fr_ticks-self.fr_ticks_prev)/330
-        self.fl_angular = (self.fl_ticks-self.fl_ticks_prev)/330
-        self.bl_angular = (self.bl_ticks-self.bl_ticks_prev)/330
-        self.br_angular = (self.br_ticks-self.br_ticks_prev)/330
+        #translate encoder ticks into angular rotations in rad/s
+        self.fr_angular = (self.fr_ticks-self.fr_ticks_prev)/330 * 2 * math.pi
+        self.fl_angular = (self.fl_ticks-self.fl_ticks_prev)/330 * 2 * math.pi
+        self.bl_angular = (self.bl_ticks-self.bl_ticks_prev)/330 * 2 * math.pi
+        self.br_angular = (self.br_ticks-self.br_ticks_prev)/330 * 2 * math.pi
         self.fr_ticks_prev = self.fr_ticks
         self.fl_ticks_prev = self.fl_ticks
         self.bl_ticks_prev = self.bl_ticks
         self.br_ticks_prev = self.br_ticks
-
+        #calculate distances using forward kinematics in cm/s
+        self.x = (self.fr_angular + self.fl_angular + self.bl_angular + self.br_angular) / 4
+        self.y = (self.fr_angular - self.fl_angular + self.bl_angular - self.br_angular) / 4
+        #calculate theta
+        self.theta = (self.fr_angular - self.fl_angular - self.bl_angular + self.br_angular)  / (4*(self.d1+self.d2))
+        #calculate speed
+        self.x_dot = self.x/time_elapsed
+        self.y_dot = self.y/time_elapsed
+        self.theta_dot = self.theta/time_elapsed
     def inverse_kinematics():
         self.x_dot = (self.fr_angular + self.fl_angular + self.bl_angular + self.br_angular) *self.R/4
 if __name__ = '__main__':
     odomtf = OdomTf()
     odomtf.spin()
-    #translate encoder ticks into distance
 
-    #calculate velocities using forward kinematics
 
-    #calculate theta
 
-    #calculate speed
+
+
+
+
 
     #publish theta
 
