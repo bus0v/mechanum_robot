@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import rospy
 import math
+import tf2_ros
 from std_msgs.msg import Int16MultiArray
 from tf2_ros.Broadcaster import TransformBroadcaster
 from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
-
+from geometry import tf_conversions
 
 class OdomTf:
     def __init__(self):
@@ -53,7 +55,8 @@ class OdomTf:
         self.last_time = rospy.Time.now()
         
         rospy.Subscriber("ticks",Int16MultiArray,ticks_reciever)
-        rospy.spin()
+        self.odom_pub = rospy.Publisher("odom", Odometry, queue_size = 50)
+        self.odom_broadcaster = TransformBroadcaster()
 
     def spin(self):
         rate = rospy.Rate(self.rate)
@@ -100,20 +103,35 @@ class OdomTf:
         self.y = self.y + (math.sin(self.theta) * self.x) + math.cos(self.theta) * self.y
         self.theta = self.theta + self.theta
 
+        #create quaternion since all odometry is 6 DOF
+        quaternion = tf_conversions.transformations.quaternion_from_euler(0,0,self.theta)
+
+        # publish transform over tf
+        self.odom_broadcaster.SendTransform(
+            (x,y,0.),
+            quaternion,
+            now,
+            "base_link",
+            "odom"
+            )
+
+        #publish odometry
+        odom = Odometry()
+        odom.header.stamp = now
+        odom.header.frame_id = "odom"
+
+        # set the pose
+        odom.pose.pose = Pose(Point(x, y, 0.), Quaternion(*quaternion))
+        odom.child_frame_id = "base_link"
+        # publish linear and angular velocities of the robot
+        odom.twist.twist = Twist(Vector3(self.x_dot,self.y_dot,0.0), Vector3(0,0,self.theta_dot))
+        # publish the odometry information over ros
+        self.odom_pub.publish(odom)
+        
+
     def inverse_kinematics():
         self.x_dot = (self.fr_angular + self.fl_angular + self.bl_angular + self.br_angular) *self.R/4
 
 if __name__ == '__main__':
     odomtf = OdomTf()
     odomtf.spin()
-
-
-
-
-
-
-
-
-    #publish theta
-
-    #publish twist or something
