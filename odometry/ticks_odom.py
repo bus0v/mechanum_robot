@@ -2,9 +2,17 @@
 import rospy
 import math
 from std_msgs.msg import Int16MultiArray
+from tf2_ros.Broadcaster import TransformBroadcaster
+from geometry_msgs.msg import Quaternion
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
+
 
 class OdomTf:
     def __init__(self):
+
+        rospy.init_node('ticks_reciever',anonymous = True)
+        self.rate =  rospy.get_param("~rate",10.0)
         #define variables
         # half width in cm
         self.d1 = 10.70
@@ -38,13 +46,12 @@ class OdomTf:
         self.fl_angular = 0.0
         self.bl_angular = 0.0
         self.br_angular = 0.0
+
         # parameters
-        self.rate =  rospy.get_param("~rate",10.0)
         self.t_delta = rospy.Duration(1.0/self.rate)
         self.min_time = rospyTime.now() + self.t_delta
-
         self.last_time = rospy.Time.now()
-        rospy.init_node('ticks_reciever',anonymous = True)
+        
         rospy.Subscriber("ticks",Int16MultiArray,ticks_reciever)
         rospy.spin()
 
@@ -63,21 +70,22 @@ class OdomTf:
 
 
     def update(self):
+
         now = rospy.Time.now()
         if now > self.min_time:
             time_elapsed = now - self.last_time
             time_elapsed = time_elapsed.to_sec()
             self.then = now
-        #translate encoder ticks into angular rotations in rad/s
-        self.fr_angular = (self.fr_ticks-self.fr_ticks_prev)/330 * 2 * math.pi
-        self.fl_angular = (self.fl_ticks-self.fl_ticks_prev)/330 * 2 * math.pi
-        self.bl_angular = (self.bl_ticks-self.bl_ticks_prev)/330 * 2 * math.pi
-        self.br_angular = (self.br_ticks-self.br_ticks_prev)/330 * 2 * math.pi
+        #translate encoder ticks into distance each wheel rotated in cm
+        self.fr_angular = (self.fr_ticks-self.fr_ticks_prev)/330 * 2 * self.R * math.pi
+        self.fl_angular = (self.fl_ticks-self.fl_ticks_prev)/330 * 2 * self.R * math.pi
+        self.bl_angular = (self.bl_ticks-self.bl_ticks_prev)/330 * 2 * self.R * math.pi
+        self.br_angular = (self.br_ticks-self.br_ticks_prev)/330 * 2 * self.R * math.pi
         self.fr_ticks_prev = self.fr_ticks
         self.fl_ticks_prev = self.fl_ticks
         self.bl_ticks_prev = self.bl_ticks
         self.br_ticks_prev = self.br_ticks
-        #calculate distances using forward kinematics in cm/s
+        #calculate distances using forward kinematics in cmfor the robot in the local frame
         self.x = (self.fr_angular + self.fl_angular + self.bl_angular + self.br_angular) / 4
         self.y = (self.fr_angular - self.fl_angular + self.bl_angular - self.br_angular) / 4
         #calculate theta
@@ -86,9 +94,16 @@ class OdomTf:
         self.x_dot = self.x/time_elapsed
         self.y_dot = self.y/time_elapsed
         self.theta_dot = self.theta/time_elapsed
+
+        #Calculate distance moved total in the global frame
+        self.x = self.x + (math.cos(self.theta) * self.x) - math.sin(self.theta) * self.y
+        self.y = self.y + (math.sin(self.theta) * self.x) + math.cos(self.theta) * self.y
+        self.theta = self.theta + self.theta
+
     def inverse_kinematics():
         self.x_dot = (self.fr_angular + self.fl_angular + self.bl_angular + self.br_angular) *self.R/4
-if __name__ = '__main__':
+
+if __name__ == '__main__':
     odomtf = OdomTf()
     odomtf.spin()
 
