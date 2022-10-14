@@ -135,7 +135,7 @@ class OdomTf:
             # set the pose
             odom.pose.pose = Pose(Point(self.x, self.y, 0.), Quaternion(*quaternion))
             odom.child_frame_id = "base_link"
-            # publish linear and angular velocities of the robot
+            # publish linear and distance velocities of the robot
             odom.twist.twist = Twist(Vector3(self.x_dot,self.y_dot,0.0), Vector3(0,0,self.theta_dot))
             # publish the odometry information over ros
             self.odom_pub.publish(odom)
