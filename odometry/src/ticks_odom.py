@@ -41,6 +41,10 @@ class OdomTf:
         self.fl_ticks = 0.0
         self.bl_ticks = 0.0
         self.br_ticks = 0.0
+        self.fr_vel = 0.0
+        self.fl_vel = 0.0
+        self.bl_vel = 0.0
+        self.br_vel = 0.0
 
         self.fr_ticks_prev = 0.0
         self.fl_ticks_prev = 0.0
@@ -58,6 +62,7 @@ class OdomTf:
         self.last_time = rospy.Time.now()
 
         rospy.Subscriber("ticks",Int16MultiArray,self.ticks_reciever)
+        rospy.Subscriber("v_filtered",Int16MultiArray,self.vel_reciever)
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size = 50)
         self.odom_broadcaster = tf2_ros.StaticTransformBroadcaster()
 
@@ -74,6 +79,11 @@ class OdomTf:
         self.bl_ticks = message.data[2]
         self.br_ticks = message.data[3]
 
+    def vel_reciever(self, message):
+        self.fr_vel = message.data[0]
+        self.fl_vel = message.data[1]
+        self.bl_vel = message.data[2]
+        self.br_vel = message.data[3]
 
     def update(self):
 
@@ -89,16 +99,20 @@ class OdomTf:
             self.bl_distance = (self.bl_ticks-self.bl_ticks_prev)/330 * 2 * self.R * math.pi
             self.br_distance = (self.br_ticks-self.br_ticks_prev)/330 * 2 * self.R * math.pi
             rospy.loginfo("\nfr_rotation: %d \nfl_rotation %d",self.fr_distance,self.fl_distance)
+            rospy.loginfo("\nbr_rotation: %d \nbl_rotation %d",self.br_distance,self.bl_distance)
             self.fr_ticks_prev = self.fr_ticks
             self.fl_ticks_prev = self.fl_ticks
             self.bl_ticks_prev = self.bl_ticks
             self.br_ticks_prev = self.br_ticks
 
-            #calculate distances using forward kinematics in cmfor the robot in the local frame
+            #calculate distances using forward kinematics in cm for the robot in the local frame
             self.x = (self.fr_distance + self.fl_distance + self.bl_distance + self.br_distance) / 4
             self.y = (self.fr_distance - self.fl_distance + self.bl_distance - self.br_distance) / 4
+            rospy.loginfo("\nx_distance: %d ",self.x)
+            rospy.loginfo("\ny_distance: %d ",self.y)
             #calculate theta
             self.theta = (self.fr_distance - self.fl_distance - self.bl_distance + self.br_distance)  / (4*(self.d1+self.d2))
+            rospy.loginfo("\ntheta: %d ",self.theta)
             #calculate speed
             self.x_dot = self.x/time_elapsed
             self.y_dot = self.y/time_elapsed
@@ -124,7 +138,6 @@ class OdomTf:
             static_trans_stamped.transform.rotation.y = quaternion[1]
             static_trans_stamped.transform.rotation.z = quaternion[2]
             static_trans_stamped.transform.rotation.w = quaternion[3]
-
 
             # publish transform over tf
             self.odom_broadcaster.sendTransform(static_trans_stamped)
