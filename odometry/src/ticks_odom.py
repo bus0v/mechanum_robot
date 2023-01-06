@@ -64,7 +64,7 @@ class OdomTf:
         rospy.Subscriber("ticks",Int16MultiArray,self.ticks_reciever)
         rospy.Subscriber("v_filtered",Int16MultiArray,self.vel_reciever)
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size = 50)
-        self.odom_broadcaster = tf2_ros.StaticTransformBroadcaster()
+        self.odom_broadcaster = tf2_ros.TransformBroadcaster()
 
     def spin(self):
         rate = rospy.Rate(self.rate)
@@ -133,7 +133,7 @@ class OdomTf:
             static_trans_stamped.transform.translation.x = self.x
             static_trans_stamped.transform.translation.y = self.y
             static_trans_stamped.transform.translation.z = 0.0
-            rospy.loginfo("\nX distance traveled: %d \nY distance %d",self.x,self.y)
+            rospy.loginfo("\nX distance traveled: %d \nY distance %d", self.x, self.y)
             static_trans_stamped.transform.rotation.x = quaternion[0]
             static_trans_stamped.transform.rotation.y = quaternion[1]
             static_trans_stamped.transform.rotation.z = quaternion[2]
