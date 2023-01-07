@@ -60,12 +60,12 @@ class OdomTf:
         self.t_delta = rospy.Duration(1.0/self.rate)
         self.min_time = rospy.Time.now() + self.t_delta
         self.last_time = rospy.Time.now()
-
         self.sub_ticks = rospy.Subscriber("ticks",Int16MultiArray, self.ticks_receiver)
         self.sub_vel = rospy.Subscriber("v_filtered",Int16MultiArray, self.vel_receiver)
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size = 50)
         self.odom_broadcaster = tf2_ros.TransformBroadcaster()
         rospy.loginfo("Initilization complete")
+
     def spin(self):
         rate = rospy.Rate(self.rate)
         while not rospy.is_shutdown():
@@ -84,9 +84,6 @@ class OdomTf:
             self.bl_ticks = message.data[2]
         if message.data[3]!=0:
             self.br_ticks = message.data[3]
-        else:
-            rospy.loginfo("No new ticks! ")
-
 
     def vel_receiver(self, message):
         rospy.loginfo("I got speed")
@@ -104,6 +101,8 @@ class OdomTf:
             #translate encoder ticks into distance each wheel rotated in cm
             rospy.loginfo("\n fr_ticks: %.2f",self.fr_ticks)
             rospy.loginfo("\nfr_prev: %d ",self.fr_ticks_prev)
+            # make an if statement here that doesn't calcultate stuff if nothing happening
+            # if fr_ticks-fr_ticks_prev !=0 then do all this
             self.fr_distance = (self.fr_ticks-self.fr_ticks_prev)/330 * 2 * self.R * math.pi
             self.fl_distance = (self.fl_ticks-self.fl_ticks_prev)/330 * 2 * self.R * math.pi
             self.bl_distance = (self.bl_ticks-self.bl_ticks_prev)/330 * 2 * self.R * math.pi
@@ -116,42 +115,43 @@ class OdomTf:
             self.br_ticks_prev = self.br_ticks
             #calculate distances using forward kinematics in cm for the robot in the local frame
             self.x_traveled = (self.fr_distance + self.fl_distance + self.bl_distance + self.br_distance) / 4
-            self.y_traveled = (self.fr_distance - self.fl_distance + self.bl_distance - self.br_distance) / 4
+            self.y_traveled = (-self.fr_distance + self.fl_distance - self.bl_distance + self.br_distance) / 4
             rospy.loginfo("\nx_traveled: %.2f ",self.x_traveled)
             rospy.loginfo("\ny_traveled: %.2f ",self.y_traveled)
             #calculate theta
             self.theta_traveled = (self.fr_distance - self.fl_distance - self.bl_distance + self.br_distance)  / (4*(self.d1+self.d2))
             #rospy.loginfo("\ntheta: %d ",self.theta)
             #calculate speed
-            self.x_dot = self.x/time_elapsed
-            self.y_dot = self.y/time_elapsed
-            self.theta_dot = self.theta/time_elapsed
-
+            self.x_dot = self.x_traveled/time_elapsed
+            self.y_dot = self.y_traveled/time_elapsed
+            self.theta_dot = self.theta_traveled/time_elapsed
+            self.last_time = rospy.Time.now()
             #Calculate distance moved total in the global frame
+            self.theta = self.theta + self.theta_traveled
             self.x = self.x + (math.cos(self.theta) * self.x_traveled) - math.sin(self.theta) * self.y_traveled
             self.y = self.y + (math.sin(self.theta) * self.x_traveled) + math.cos(self.theta) * self.y_traveled
             rospy.loginfo("\nx_total: %.2f ",self.x)
             rospy.loginfo("\ny_total: %.2f ",self.y)
-            self.theta = self.theta + self.theta_traveled
+
 
             #create quaternion since all odometry is 6 DOF
             quaternion = tf_conversions.transformations.quaternion_from_euler(0,0,self.theta)
             #create transform
-            static_trans_stamped = geometry_msgs.msg.TransformStamped()
-            static_trans_stamped.header.stamp = now
-            static_trans_stamped.header.frame_id = "base_link"
-            static_trans_stamped.child_frame_id = "odom"
-            static_trans_stamped.transform.translation.x = self.x
-            static_trans_stamped.transform.translation.y = self.y
-            static_trans_stamped.transform.translation.z = 0.0
+            trans_stamped = geometry_msgs.msg.TransformStamped()
+            trans_stamped.header.stamp = now
+            trans_stamped.header.frame_id = "base_link"
+            trans_stamped.child_frame_id = "odom"
+            trans_stamped.transform.translation.x = self.x
+            trans_stamped.transform.translation.y = self.y
+            trans_stamped.transform.translation.z = 0.0
             #rospy.loginfo("\nX distance traveled: %d \nY distance %d", self.x, self.y)
-            static_trans_stamped.transform.rotation.x = quaternion[0]
-            static_trans_stamped.transform.rotation.y = quaternion[1]
-            static_trans_stamped.transform.rotation.z = quaternion[2]
-            static_trans_stamped.transform.rotation.w = quaternion[3]
+            trans_stamped.transform.rotation.x = quaternion[0]
+            trans_stamped.transform.rotation.y = quaternion[1]
+            trans_stamped.transform.rotation.z = quaternion[2]
+            trans_stamped.transform.rotation.w = quaternion[3]
 
             # publish transform over tf
-            self.odom_broadcaster.sendTransform(static_trans_stamped)
+            self.odom_broadcaster.sendTransform(trans_stamped)
 
             #publish odometry
             odom = Odometry()
@@ -159,7 +159,7 @@ class OdomTf:
             odom.header.frame_id = "odom"
 
             # set the pose
-            odom.pose.pose = Pose(Point(self.x, self.y, 0.), Quaternion(*quaternion))
+            odom.pose.pose = Pose(Point(self.x, self.y, 0.0), Quaternion(*quaternion))
             odom.child_frame_id = "base_link"
             # publish linear and distance velocities of the robot
             odom.twist.twist = Twist(Vector3(self.x_dot,self.y_dot,0.0), Vector3(0,0,self.theta_dot))
