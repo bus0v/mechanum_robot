@@ -61,7 +61,7 @@ class OdomTf:
         self.min_time = rospy.Time.now() + self.t_delta
         self.last_time = rospy.Time.now()
         self.sub_ticks = rospy.Subscriber("ticks",Int16MultiArray, self.ticks_receiver)
-        self.sub_vel = rospy.Subscriber("v_filtered",Int16MultiArray, self.vel_receiver)
+        #self.sub_vel = rospy.Subscriber("v_filtered",Int16MultiArray, self.vel_receiver)
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size = 50)
         self.odom_broadcaster = tf2_ros.TransformBroadcaster()
         rospy.loginfo("Initilization complete")
@@ -75,16 +75,16 @@ class OdomTf:
     def ticks_receiver(self, message):
         #recieve and record encoder ticks
         rospy.loginfo("I got ticks")
-        rospy.loginfo(message.data[0])
-        if message.data[0]!=0:
-            self.fr_ticks = message.data[0]
-        if message.data[1]!=0:
-            self.fl_ticks = message.data[1]
-        if message.data[2]!=0:
-            self.bl_ticks = message.data[2]
-        if message.data[3]!=0:
-            self.br_ticks = message.data[3]
-
+        if message.data:
+            if message.data[0]!=0:
+                self.fr_ticks = message.data[0]
+            if message.data[1]!=0:
+                self.fl_ticks = message.data[1]
+            if message.data[2]!=0:
+                self.bl_ticks = message.data[2]
+            if message.data[3]!=0:
+                self.br_ticks = message.data[3]
+        
     def vel_receiver(self, message):
         rospy.loginfo("I got speed")
         self.fr_vel = message.data[0]
