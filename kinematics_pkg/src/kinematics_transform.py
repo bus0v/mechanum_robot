@@ -66,7 +66,7 @@ def globalToWheel(qvel):
 
 def publisher(message):
     pub = rospy.Publisher('motor',Float32MultiArray,queue_size=50)
-    rate = rospy.Rate(57600)
+    rate = rospy.Rate(10)
     pub.publish(message)
 
 if __name__ == "__main__":
