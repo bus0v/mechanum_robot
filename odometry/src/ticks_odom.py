@@ -74,7 +74,7 @@ class OdomTf:
 
     def ticks_receiver(self, message):
         #recieve and record encoder ticks
-        rospy.loginfo("I got ticks")
+
         if message.data:
             if message.data[0]!=0:
                 self.fr_ticks = message.data[0]
@@ -84,7 +84,7 @@ class OdomTf:
                 self.bl_ticks = message.data[2]
             if message.data[3]!=0:
                 self.br_ticks = message.data[3]
-        
+
     def vel_receiver(self, message):
         rospy.loginfo("I got speed")
         self.fr_vel = message.data[0]
