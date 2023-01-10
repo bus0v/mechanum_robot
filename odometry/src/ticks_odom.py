@@ -3,6 +3,7 @@ import rospy
 import math
 import tf2_ros
 from std_msgs.msg import Int16MultiArray
+from std_msgs.msg import Float32MultiArray
 from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Pose
@@ -61,7 +62,7 @@ class OdomTf:
         self.min_time = rospy.Time.now() + self.t_delta
         self.last_time = rospy.Time.now()
         self.sub_ticks = rospy.Subscriber("ticks",Int16MultiArray, self.ticks_receiver)
-        #self.sub_vel = rospy.Subscriber("v_filtered",Int16MultiArray, self.vel_receiver)
+        self.sub_vel = rospy.Subscriber("v_filtered",Float32MultiArray, self.vel_receiver)
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size = 50)
         self.odom_broadcaster = tf2_ros.TransformBroadcaster()
         rospy.loginfo("Initilization complete")
