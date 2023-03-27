@@ -2,10 +2,10 @@
   <xacro:property name = "base_width" value = "0.166"/>
   <xacro:property name = "base_length" value="0.266"/>
   <xacro:property name = "base_height" value="0.08"/>
-  <xacro:property name = "wheel_radius" value="0.08"/>
+  <xacro:property name = "wheel_radius" value="0.04"/>
   <xacro:property name = "wheel_width" value="0.04"/>
-  <xacro:property name = "wheel_ygap" value="0.009"/>
-  <xacro:property name = "wheel_zoff" value="-0.038"/>
+  <xacro:property name = "wheel_ygap" value="0.114"/>
+  <xacro:property name = "wheel_zoff" value="-0.078"/>
   <xacro:property name = "wheel_xoff" value="0.074"/>
   <xacro:property name = "laser_zoff" value="0.147"/>
   <xacro:property name = "sonar_size" value = "0.045 0.015 0.02"/>
@@ -129,7 +129,7 @@
 
   <joint name = "kinect_rotate" type = "revolute">
     <axis xyz="0 1 0"/>
-    <limit effort="1000.0" lower="0.471239" upper="0.471239" velocity="0.1"/>
+    <limit effort="1000.0" lower="-0.471239" upper="0.471239" velocity="0.1"/>
     <parent link = "base_link"/>
     <child link = "kinect"/>
     <origin xyz = "${kinect_xoff} 0 ${kinect_zoff}"/>
