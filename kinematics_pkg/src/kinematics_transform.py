@@ -10,13 +10,13 @@ from std_msgs.msg import Float32MultiArray
 from std_msgs.msg import MultiArrayDimension
 from geometry_msgs.msg import Twist
 # half width in cm
-d1 = 10.70
+d1 = 0.1070
 # half length in cm
-d2 = 8.30
+d2 = 0.0830
 # wheel radius in cm
-R = 4.00
+R = 0.04
 # roller radius in cm
-r = 0.75
+
 # thetadot is rad/s
 # speeds are cm/s
 

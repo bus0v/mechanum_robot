@@ -18,16 +18,14 @@ class OdomTf:
     def __init__(self):
         # initialise node
         rospy.init_node('odometryTF',anonymous = True)
-        self.rate =  rospy.get_param("~rate",0.5)
+        self.rate =  rospy.get_param("~rate",20)
         # define variables
-        # half width in cm
-        self.d1 = 10.70
-        # half length in cm
-        self.d2 = 8.30
-        # wheel radius in cm
-        self.R = 4.00
-        # roller radius in cm
-        self.r = 0.75
+        # half width in m
+        self.d1 = 0.1070
+        # half length in m
+        self.d2 = 0.0830
+        # wheel radius in m
+        self.R = 0.04
         #ticks per rotation = 11(ticks) * 30 gear ratio
         self.tpr = 330
 
@@ -99,38 +97,24 @@ class OdomTf:
             time_elapsed = now - self.last_time
             time_elapsed = time_elapsed.to_sec()
             self.then = now
-            #translate encoder ticks into distance each wheel rotated in cm
-            rospy.loginfo("\n fr_ticks: %.2f",self.fr_ticks)
-            rospy.loginfo("\nfr_prev: %d ",self.fr_ticks_prev)
-            # make an if statement here that doesn't calcultate stuff if nothing happening
-            # if fr_ticks-fr_ticks_prev !=0 then do all this
-            self.fr_distance = (self.fr_ticks-self.fr_ticks_prev)/330 * 2 * self.R * math.pi
-            self.fl_distance = (self.fl_ticks-self.fl_ticks_prev)/330 * 2 * self.R * math.pi
-            self.bl_distance = (self.bl_ticks-self.bl_ticks_prev)/330 * 2 * self.R * math.pi
-            self.br_distance = (self.br_ticks-self.br_ticks_prev)/330 * 2 * self.R * math.pi
-            rospy.loginfo("\nfr_rotation: %.2f \nfl_rotation: %.2f",self.fr_distance,self.fl_distance)
-            #rospy.loginfo("\nbr_rotation: %d \nbl_rotation: %d",self.br_distance,self.bl_distance)
-            self.fr_ticks_prev = self.fr_ticks
-            self.fl_ticks_prev = self.fl_ticks
-            self.bl_ticks_prev = self.bl_ticks
-            self.br_ticks_prev = self.br_ticks
-            #calculate distances using forward kinematics in cm for the robot in the local frame
-            self.x_traveled = (self.fr_distance + self.fl_distance + self.bl_distance + self.br_distance) / 4
-            self.y_traveled = (-self.fr_distance + self.fl_distance - self.bl_distance + self.br_distance) / 4
+
+            # forward kinematics based on linear speed in cm/s
+            self.x_dot = (self.fr_vel + self.fl_vel + self.bl_vel + self.br_vel)/4
+            self.y_dot = (-self.fl_vel + self.fr_vel + self.bl_vel - self.br_vel)/4
+            self.theta_dot = (-self.fl_vel + self.fr_vel - self.bl_vel + self.br_vel) * (self.R/(4*(self.d1+self.d2)))
+
+            self.x_traveled = self.x_dot * time_elapsed
+            self.y_traveled = self.y_dot * time_elapsed
             rospy.loginfo("\nx_traveled: %.2f ",self.x_traveled)
             rospy.loginfo("\ny_traveled: %.2f ",self.y_traveled)
             #calculate theta
-            self.theta_traveled = (self.fr_distance - self.fl_distance - self.bl_distance + self.br_distance)  / (4*(self.d1+self.d2))
-            #rospy.loginfo("\ntheta: %d ",self.theta)
-            #calculate speed
-            self.x_dot = self.x_traveled/time_elapsed
-            self.y_dot = self.y_traveled/time_elapsed
-            self.theta_dot = self.theta_traveled/time_elapsed
+            self.theta_traveled = self.theta_dot * time_elapsed
             self.last_time = rospy.Time.now()
-            #Calculate distance moved total in the global frame
+            #Calculate distance moved total in the global framelast_time
             self.theta = self.theta + self.theta_traveled
             self.x = self.x + (math.cos(self.theta) * self.x_traveled) - math.sin(self.theta) * self.y_traveled
             self.y = self.y + (math.sin(self.theta) * self.x_traveled) + math.cos(self.theta) * self.y_traveled
+
             rospy.loginfo("\nx_total: %.2f ",self.x)
             rospy.loginfo("\ny_total: %.2f ",self.y)
 
