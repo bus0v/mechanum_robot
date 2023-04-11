@@ -1,0 +1,19 @@
+
+<launch>
+   <node pkg="kinematics_pkg" name="kinematics" type="kinematics_transform.py"/>
+   <node pkg="teleop_twist_keyboard" output="screen" launch-prefix="xterm -e" name="keyboard" type="teleop_twist_keyboard.py">
+     <param name = "repeat_rate" value = "20.0"/>
+   </node>
+   <node pkg="odometry" name="odometry" type="ticks_odom.py"/>
+   <include file = "state_publisher.launch"/>
+   <include file="$(find ydlidar_ros_driver)/launch/X4_notf.launch"/>
+   <node pkg="rosserial_python" output="screen" name="serial" type="serial_node.py">
+	<param name = "port" value = "/dev/ttyACM0"/>
+  <param name = "baud" value = "115200"/>
+   </node>
+   <remap from="imu/data" to="imu_data"/>
+   <node pkg="imu_filter_madgwick" name="imu_filter" type="imu_filter_node">
+     <param name = "use_mag" value = "false"/>
+     <param name = "publish_tf" value = "false"/>
+   </node>
+ </launch>
