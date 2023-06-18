@@ -128,9 +128,9 @@
     </visual>
   </link>
 
-  <joint name = "kinect_rotate" type = "revolute">
-    <axis xyz="0 1 0"/>
-    <limit effort="1000.0" lower="-0.471239" upper="0.471239" velocity="0.1"/>
+  <joint name = "kinect_rotate" type = "fixed">
+    <!---><axis xyz="0 1 0"/>
+    <limit effort="1000.0" lower="-0.471239" upper="0.471239" velocity="0.1"/><-->
     <parent link = "base_link"/>
     <child link = "kinect"/>
     <origin xyz = "${kinect_xoff} 0 ${kinect_zoff}"/>
