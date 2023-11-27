@@ -28,7 +28,7 @@ class Kinematics:
         np.set_printoptions(precision = 3)
         self.pub = rospy.Publisher('motor',Float32MultiArray,queue_size=50)
         self.rate = rospy.Rate(10)
-
+        rospy.spin()
     def convert(message):
         rospy.loginfo(globalToWheel(np.array([message.linear.x, message.linear.y, message.angular.z])))
         self.pub.publish(globalToWheel(np.array([message.linear.y, message.linear.x, message.angular.z])))
