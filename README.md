@@ -10,17 +10,22 @@ The robot consists of:
   - Motor Shield with TB6612 MOSFET drivers 
   - YDLidar X4
   - 4 ultrasound distance sensors
+  - IMU MPU 6890
+  - xbox Kinect
   
-In the future I might add a Kinect onto it, to use as a depth camera
- 
+
 This repo houses the code that runs on the raspberry pi and [this](https://github.com/bus0v/Robot-Arduino) one houses the code that runs on the arduino.
 
-The robot uses ROS as the mainframework. The Arduino consists of it's own node and communicates to the Raspberry Pi via rosserial. 
+The robot uses ROS as the main framework. The Arduino consists of it's own node and communicates to the Raspberry Pi via rosserial. 
 
 Currently these are the nodes completed:
 
 - Kinematics: converts a raw speed vector into wheel velocities
-- Odometry: recieves encoder ticks from the wheels and computes it into distance travelled and current speed. This node also broad casts the odometry information
+- Odometry: recieves encoder ticks from the wheels and computes it into distance travelled and current speed. This node also broadcasts the odometry information.
+
+The robot launch files can also launch the lidar and teleop_twist_keyboard. Which allows the user to drive the robot around and visualize the surroundings from the laser scanner.
+
+I also made a URDF model of the robot to load into rviz.
 
 Future work planned:
  - Implementing SLAM

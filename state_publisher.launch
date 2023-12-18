@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="tf2_ros" type="static_transform_publisher" name = "baselink_broadcaster" args = "0 0 -0.1275 0 0 0 1 base_footprint base_link"/>
+  <!--load the URDF into the parameter server. -->
+<arg name = "model" default="$(find odometry)/urdf/mrcrabs.xml"/>
+<param name="my_robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+  <node pkg = "robot_state_publisher" type="robot_state_publisher" name = "robot_st_pub">
+    <remap from="robot_description" to = "my_robot_description"/>
+    <!---> <remap from = "joint_states" to="different_joint_states><-->
+  </node>
+</launch>
